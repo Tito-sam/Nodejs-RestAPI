@@ -29,16 +29,16 @@ export const getEmployee = async (req, res) => {
 
 export const createEmployees = async (req, res) => {
     const {name, salary} = req.body;
-    console.log(salary);
+    const [rows] = await pool.query('INSERT INTO employee (name, salary) VALUES (?, ?)', [name, salary]);
+    console.log(rows)
     try {
-        const [rows] = await pool.query('INSERT INTO employee (name, salary) VALUES (?, ?)', [name, salary]);
-        console.log(rows)
         res.send({ 
             id: rows.insertId,
             name,
             salary    
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: "Something goes wrong"
         })
